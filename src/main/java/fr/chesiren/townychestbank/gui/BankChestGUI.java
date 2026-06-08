@@ -43,8 +43,11 @@ public class BankChestGUI {
 
     public void openForPlayer(Player player, Town town) {
         Inventory inv = buildInventory(town);
-        openGUIs.put(player.getUniqueId(), town.getUUID());
+        // openInventory ferme l'inventaire precedent de facon synchrone (InventoryCloseEvent)
+        // avant que ce joueur soit associe a la nouvelle ville -> ordre critique pour eviter
+        // le credit du depot sur la mauvaise ville
         player.openInventory(inv);
+        openGUIs.put(player.getUniqueId(), town.getUUID());
     }
 
     public Inventory buildInventory(Town town) {

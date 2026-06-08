@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -37,6 +38,13 @@ public class InventoryListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         BankChestGUI gui = plugin.getBankChestGUI();
         if (!gui.isBankGUI(event.getView().getTitle())) return;
+
+        // Un double-clic (COLLECT_TO_CURSOR) collecterait les items virtuels des boutons de retrait
+        // (slots 9-17) sans passer par handleWithdraw -> items gratuits. Bloquer sans condition.
+        if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+            event.setCancelled(true);
+            return;
+        }
 
         int rawSlot = event.getRawSlot();
         int topSize = event.getView().getTopInventory().getSize();
