@@ -104,6 +104,7 @@ public class ChestBankManager {
      * Convertit le solde de la banque en items droppés au sol.
      * Les items les plus précieux par stack sont droppés en premier pour minimiser le nombre d'entités.
      * Retourne le montant effectivement converti en items.
+     * Le débit du compte est effectué AVANT le drop pour éviter toute duplication si withdraw échoue.
      */
     public double dropBankContents(UUID townUUID, Location dropLoc) {
         try {
@@ -116,25 +117,31 @@ public class ChestBankManager {
             List<Map.Entry<Material, Double>> sorted = new ArrayList<>(plugin.getPluginConfig().getCurrencyItems().entrySet());
             sorted.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
 
+            // Première passe: calculer les stacks à dropper sans toucher au monde
+            List<ItemStack> toDrop = new ArrayList<>();
             double totalDropped = 0;
             for (Map.Entry<Material, Double> entry : sorted) {
                 Material mat = entry.getKey();
                 double value = entry.getValue();
                 if (value <= 0 || remaining < value) continue;
 
-                int totalCount = (int) Math.floor(remaining / value);
-                while (totalCount > 0) {
-                    int stackSize = Math.min(64, totalCount);
-                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(mat, stackSize));
+                int count = (int) Math.floor(remaining / value);
+                while (count > 0) {
+                    int stackSize = Math.min(64, count);
+                    toDrop.add(new ItemStack(mat, stackSize));
                     double dropped = stackSize * value;
                     totalDropped += dropped;
                     remaining -= dropped;
-                    totalCount -= stackSize;
+                    count -= stackSize;
                 }
             }
 
-            if (totalDropped > 0) {
-                town.getAccount().withdraw(totalDropped, "Coffre-banque detruit - items droppes au sol");
+            if (totalDropped <= 0) return 0;
+
+            // Débiter AVANT de dropper: si withdraw échoue, aucun item n'est créé
+            town.getAccount().withdraw(totalDropped, "Coffre-banque detruit - items droppes au sol");
+            for (ItemStack item : toDrop) {
+                dropLoc.getWorld().dropItemNaturally(dropLoc, item);
             }
             return totalDropped;
         } catch (Exception e) {

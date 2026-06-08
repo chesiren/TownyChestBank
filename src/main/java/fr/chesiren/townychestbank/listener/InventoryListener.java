@@ -87,7 +87,11 @@ public class InventoryListener implements Listener {
                             int toAdd = Math.min(space, item.getAmount());
                             existing.setAmount(existing.getAmount() + toAdd);
                             item.setAmount(item.getAmount() - toAdd);
-                            if (item.getAmount() <= 0) event.setCurrentItem(null);
+                            if (item.getAmount() <= 0) {
+                                event.setCurrentItem(null);
+                            } else {
+                                event.setCurrentItem(item);
+                            }
                             return;
                         }
                     }
@@ -169,7 +173,6 @@ public class InventoryListener implements Listener {
         }
 
         if (!canDeposit) {
-            Messaging.sendError(player, "tcb_no_towny_permission");
             return;
         }
 
@@ -211,11 +214,6 @@ public class InventoryListener implements Listener {
 
         int amount = rightClick ? 1 : maxWithdraw;
         double cost = amount * value;
-
-        if (player.getInventory().firstEmpty() == -1) {
-            Messaging.sendError(player, "tcb_inventory_full");
-            return;
-        }
 
         try {
             town.getAccount().withdraw(cost, "TownyChestBank");
