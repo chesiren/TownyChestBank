@@ -4,13 +4,17 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Town;
 import fr.chesiren.townychestbank.TownyChestBankPlugin;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -93,6 +97,49 @@ public class ChestBankManager {
             } catch (Exception e) {
                 plugin.getLogger().warning("Erreur chargement donnees pour " + uuidStr + ": " + e.getMessage());
             }
+        }
+    }
+
+    /**
+     * Convertit le solde de la banque en items droppés au sol.
+     * Les items les plus précieux par stack sont droppés en premier pour minimiser le nombre d'entités.
+     * Retourne le montant effectivement converti en items.
+     */
+    public double dropBankContents(UUID townUUID, Location dropLoc) {
+        try {
+            Town town = TownyUniverse.getInstance().getTown(townUUID);
+            if (town == null) return 0;
+
+            double remaining = town.getAccount().getHoldingBalance();
+            if (remaining <= 0) return 0;
+
+            List<Map.Entry<Material, Double>> sorted = new ArrayList<>(plugin.getPluginConfig().getCurrencyItems().entrySet());
+            sorted.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
+
+            double totalDropped = 0;
+            for (Map.Entry<Material, Double> entry : sorted) {
+                Material mat = entry.getKey();
+                double value = entry.getValue();
+                if (value <= 0 || remaining < value) continue;
+
+                int totalCount = (int) Math.floor(remaining / value);
+                while (totalCount > 0) {
+                    int stackSize = Math.min(64, totalCount);
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(mat, stackSize));
+                    double dropped = stackSize * value;
+                    totalDropped += dropped;
+                    remaining -= dropped;
+                    totalCount -= stackSize;
+                }
+            }
+
+            if (totalDropped > 0) {
+                town.getAccount().withdraw(totalDropped, "Coffre-banque detruit - items droppes au sol");
+            }
+            return totalDropped;
+        } catch (Exception e) {
+            plugin.getLogger().warning("Erreur lors du drop du coffre-banque: " + e.getMessage());
+            return 0;
         }
     }
 

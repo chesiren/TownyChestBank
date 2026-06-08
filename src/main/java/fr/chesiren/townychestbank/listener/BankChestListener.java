@@ -72,8 +72,10 @@ public class BankChestListener implements Listener {
                 if (town != null) {
                     Resident resident = TownyAPI.getInstance().getResident(player);
                     if (resident != null && town.getMayor().equals(resident)) {
+                        Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
+                        plugin.getChestBankManager().dropBankContents(townUUID, dropLoc);
                         plugin.getChestBankManager().removeChestForTown(townUUID);
-                        Messaging.sendInfo(player, "tcb_chest_removed_short");
+                        Messaging.sendInfo(player, "tcb_chest_destroyed_warning");
                         return;
                     }
                 }

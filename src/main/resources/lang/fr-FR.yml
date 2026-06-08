@@ -16,8 +16,10 @@ tcb_command_blocked: "Les transactions bancaires doivent se faire via le coffre-
 
 # --- Succès ---
 tcb_chest_set: "Coffre-banque défini pour la ville %s."
+tcb_chest_moved: "Coffre-banque de la ville %s déplacé vers la nouvelle position."
 tcb_chest_removed: "Coffre-banque dé-enregistré pour %s."
 tcb_chest_removed_short: "Coffre-banque dé-enregistré."
+tcb_chest_destroyed_warning: "&cVotre coffre-banque a été détruit ! Le contenu a été déposé au sol. Posez vite un nouveau coffre et utilisez &e/tchestbank set &cpour rétablir la banque de votre ville."
 tcb_deposited: "Dépôt : %s po dans la banque de la ville."
 tcb_withdrew: "Retrait : %s po (%sx %s)."
 

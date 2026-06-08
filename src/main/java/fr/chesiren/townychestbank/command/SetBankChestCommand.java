@@ -72,8 +72,13 @@ public class SetBankChestCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
+        boolean moving = plugin.getChestBankManager().getChestForTown(town.getUUID()) != null;
         plugin.getChestBankManager().setChestForTown(town.getUUID(), target.getLocation());
-        Messaging.sendSuccess(player, "tcb_chest_set", town.getName());
+        if (moving) {
+            Messaging.sendSuccess(player, "tcb_chest_moved", town.getName());
+        } else {
+            Messaging.sendSuccess(player, "tcb_chest_set", town.getName());
+        }
     }
 
     private void cmdRemove(Player player) {
