@@ -20,6 +20,7 @@ tcb_chest_moved: "Chest bank for town %s moved to new position."
 tcb_chest_removed: "Chest bank unregistered for %s."
 tcb_chest_removed_short: "Chest bank unregistered."
 tcb_chest_destroyed_warning: "&cYour town's chest bank was destroyed! Its contents were dropped on the ground. Quickly place a new chest and use &e/tchestbank set &cto restore your town's bank."
+tcb_chest_exploded_warning: "&cYour town's chest bank was destroyed by an enemy! The contents are on the ground. Quickly place a new chest and use &e/tchestbank set &cto restore your town's bank."
 tcb_deposited: "Deposit: %s coins into the town bank."
 tcb_withdrew: "Withdrawal: %s coins (%sx %s)."
 
