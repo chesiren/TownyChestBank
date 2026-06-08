@@ -1,0 +1,57 @@
+# TownyChestBank - English translations
+
+tcb_prefix: '&7[&6TownyChestBank&7] &r'
+
+# --- General errors ---
+tcb_player_only: "This command can only be used in-game."
+tcb_not_in_town: "You are not part of any town."
+tcb_no_permission: "You do not have permission to do this."
+tcb_no_towny_permission: "You do not have Towny permission to interact with this chest bank."
+
+# --- Command errors ---
+tcb_no_chest: "No chest found (look at a chest within 5 blocks)."
+tcb_not_homeblock: "The chest must be in your town's homeblock or a bank plot."
+tcb_no_bank_chest: "Your town has no chest bank. Use /tchestbank set."
+tcb_command_blocked: "Bank transactions must be done via the town chest bank."
+
+# --- Success ---
+tcb_chest_set: "Chest bank set for town %s."
+tcb_chest_removed: "Chest bank unregistered for %s."
+tcb_chest_removed_short: "Chest bank unregistered."
+tcb_deposited: "Deposit: %s coins into the town bank."
+tcb_withdrew: "Withdrawal: %s coins (%sx %s)."
+
+# --- Transaction errors ---
+tcb_not_enough_funds: "Insufficient funds for this withdrawal."
+tcb_inventory_full: "Your inventory is full, withdrawal not possible."
+tcb_deposit_full: "Deposit zone is full."
+tcb_error_deposit: "Deposit error."
+tcb_error_withdraw: "Withdrawal error."
+
+# --- Info command ---
+tcb_info_header: "Chest bank for %s:"
+tcb_info_world: "  World: %s"
+tcb_info_position: "  Position: X=%s Y=%s Z=%s"
+tcb_info_balance: "  Balance: %s coins"
+
+# --- Help ---
+tcb_aide_titre: "TownyChestBank - Commands:"
+tcb_aide_set: "/tchestbank set - Set the targeted chest as the town chest bank"
+tcb_aide_remove: "/tchestbank remove - Unregister the chest bank"
+tcb_aide_info: "/tchestbank info - Show the town chest bank info"
+
+# --- GUI items ---
+tcb_gui_balance_title: "Bank of %s"
+tcb_gui_balance_lore_solde: "Current balance:"
+tcb_gui_balance_lore_po: "coins"
+tcb_gui_balance_lore_depot: "Bottom row: deposit coins."
+tcb_gui_balance_lore_shift: "Shift+click from inventory: quick deposit."
+tcb_gui_balance_lore_retrait: "Click a coin: withdraw."
+tcb_gui_withdraw_lore_valeur: "Unit value: %s coins"
+tcb_gui_withdraw_lore_retirable: "Withdrawable: %s pieces"
+tcb_gui_withdraw_lore_clic_gauche: "Left click: Withdraw %s"
+tcb_gui_withdraw_lore_clic_droit: "Right click: Withdraw 1"
+tcb_gui_withdraw_lore_insuffisant: "Insufficient funds."
+
+# --- Language reload ---
+tcb_reloaded_lang: "TownyChestBank language files reloaded."

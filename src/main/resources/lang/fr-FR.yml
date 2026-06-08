@@ -1,0 +1,57 @@
+# TownyChestBank - Traductions françaises
+
+tcb_prefix: '&7[&6TownyChestBank&7] &r'
+
+# --- Erreurs générales ---
+tcb_player_only: "Cette commande ne peut être utilisée qu'en jeu."
+tcb_not_in_town: "Vous n'êtes pas dans une ville."
+tcb_no_permission: "Vous n'avez pas la permission de faire cela."
+tcb_no_towny_permission: "Vous n'avez pas la permission Towny pour interagir avec ce coffre-banque."
+
+# --- Erreurs de commande ---
+tcb_no_chest: "Aucun coffre ici (regardez un coffre à 5 blocs max)."
+tcb_not_homeblock: "Le coffre doit être dans le homeblock ou un plot bank de votre ville."
+tcb_no_bank_chest: "Votre ville n'a pas de coffre-banque. Utilisez /tchestbank set."
+tcb_command_blocked: "Les transactions bancaires doivent se faire via le coffre-banque de la ville."
+
+# --- Succès ---
+tcb_chest_set: "Coffre-banque défini pour la ville %s."
+tcb_chest_removed: "Coffre-banque dé-enregistré pour %s."
+tcb_chest_removed_short: "Coffre-banque dé-enregistré."
+tcb_deposited: "Dépôt : %s po dans la banque de la ville."
+tcb_withdrew: "Retrait : %s po (%sx %s)."
+
+# --- Erreurs de transaction ---
+tcb_not_enough_funds: "Fonds insuffisants pour ce retrait."
+tcb_inventory_full: "Votre inventaire est plein, retrait impossible."
+tcb_deposit_full: "Zone de dépôt pleine."
+tcb_error_deposit: "Erreur de dépôt."
+tcb_error_withdraw: "Erreur de retrait."
+
+# --- Commande info ---
+tcb_info_header: "Coffre-banque de %s :"
+tcb_info_world: "  Monde : %s"
+tcb_info_position: "  Position : X=%s Y=%s Z=%s"
+tcb_info_balance: "  Solde : %s po"
+
+# --- Aide ---
+tcb_aide_titre: "TownyChestBank - Commandes :"
+tcb_aide_set: "/tchestbank set - Définir le coffre regardé comme coffre-banque de la ville"
+tcb_aide_remove: "/tchestbank remove - Retirer l'enregistrement du coffre-banque"
+tcb_aide_info: "/tchestbank info - Afficher les infos du coffre-banque de la ville"
+
+# --- Items GUI ---
+tcb_gui_balance_title: "Banque de %s"
+tcb_gui_balance_lore_solde: "Solde actuel :"
+tcb_gui_balance_lore_po: "po"
+tcb_gui_balance_lore_depot: "Rangée du bas : déposer des pièces."
+tcb_gui_balance_lore_shift: "Shift+clic depuis l'inventaire : dépôt rapide."
+tcb_gui_balance_lore_retrait: "Clic sur une pièce : retirer."
+tcb_gui_withdraw_lore_valeur: "Valeur unitaire : %s po"
+tcb_gui_withdraw_lore_retirable: "Retirable : %s exemplaires"
+tcb_gui_withdraw_lore_clic_gauche: "Clic gauche : Retirer %s"
+tcb_gui_withdraw_lore_clic_droit: "Clic droit : Retirer 1"
+tcb_gui_withdraw_lore_insuffisant: "Fonds insuffisants."
+
+# --- Rechargement langue ---
+tcb_reloaded_lang: "Fichiers de langue TownyChestBank rechargés."

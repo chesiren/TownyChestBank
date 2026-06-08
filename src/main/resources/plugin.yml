@@ -1,0 +1,27 @@
+name: TownyChestBank
+main: fr.chesiren.townychestbank.TownyChestBankPlugin
+version: ${project.version}
+api-version: ${project.bukkitAPIVersion}
+author: chesiren
+prefix: TownyChestBank
+depend: [Towny]
+
+description: Remplace la banque virtuelle Towny par un coffre physique.
+
+commands:
+    tchestbank:
+        aliases: [tcb]
+        description: Commandes de TownyChestBank
+        permission: townychestbank.use
+        usage: /tcb <set|remove|info>
+
+permissions:
+    townychestbank.use:
+        description: Utiliser les commandes de base de TownyChestBank
+        default: true
+    townychestbank.set:
+        description: Définir ou déplacer le coffre-banque de sa ville (maire/assistant)
+        default: op
+    townychestbank.admin:
+        description: Accès administrateur complet à TownyChestBank
+        default: op

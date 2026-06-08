@@ -1,0 +1,7 @@
+# Monnaies acceptees : nom du materiau Minecraft -> valeur en po
+currency:
+  GOLD_NUGGET: 1.0
+  GOLD_INGOT: 9.0
+  GOLD_BLOCK: 81.0
+  EMERALD: 10.0
+  DIAMOND: 50.0
