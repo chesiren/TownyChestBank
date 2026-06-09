@@ -234,9 +234,9 @@ public class InventoryListener implements Listener {
     }
 
     private boolean checkPermission(Player player, UUID townUUID) {
-        Location chestLoc = plugin.getChestBankManager().getChestForTown(townUUID);
-        if (chestLoc == null) return false;
-        if (BankChestListener.hasSwitchPermission(player, chestLoc)) return true;
+        Town town = getTown(townUUID);
+        if (town == null) return false;
+        if (BankChestListener.hasSwitchPermission(player, town)) return true;
         Messaging.sendError(player, "tcb_no_towny_permission");
         return false;
     }

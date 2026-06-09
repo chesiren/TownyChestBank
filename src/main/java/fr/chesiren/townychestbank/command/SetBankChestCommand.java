@@ -8,6 +8,7 @@ import com.palmergames.bukkit.towny.object.TownBlock;
 import com.palmergames.bukkit.towny.object.TownBlockType;
 import com.palmergames.bukkit.towny.object.WorldCoord;
 import fr.chesiren.townychestbank.TownyChestBankPlugin;
+import fr.chesiren.townychestbank.util.AdminUtil;
 import fr.chesiren.townychestbank.util.Messaging;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +49,7 @@ public class SetBankChestCommand implements CommandExecutor, TabCompleter {
     }
 
     private void cmdSet(Player player) {
-        if (!player.hasPermission("townychestbank.set") && !player.hasPermission("townychestbank.admin")) {
+        if (!player.hasPermission("townychestbank.set") && !AdminUtil.isAdminMode(player)) {
             Messaging.sendError(player, "tcb_no_permission");
             return;
         }
@@ -62,7 +63,7 @@ public class SetBankChestCommand implements CommandExecutor, TabCompleter {
         Town town = getTownOfPlayer(player);
         if (town == null) return;
 
-        if (!player.hasPermission("townychestbank.admin") && !isMayorOrAssistant(player, town)) {
+        if (!AdminUtil.isAdminMode(player) && !isMayorOrAssistant(player, town)) {
             Messaging.sendError(player, "tcb_no_permission");
             return;
         }
@@ -85,7 +86,7 @@ public class SetBankChestCommand implements CommandExecutor, TabCompleter {
         Town town = getTownOfPlayer(player);
         if (town == null) return;
 
-        if (!player.hasPermission("townychestbank.admin") && !isMayorOrAssistant(player, town)) {
+        if (!AdminUtil.isAdminMode(player) && !isMayorOrAssistant(player, town)) {
             Messaging.sendError(player, "tcb_no_permission");
             return;
         }

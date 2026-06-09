@@ -4,9 +4,8 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.TownyPermission;
-import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import fr.chesiren.townychestbank.TownyChestBankPlugin;
+import fr.chesiren.townychestbank.util.AdminUtil;
 import fr.chesiren.townychestbank.util.Messaging;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -47,13 +46,14 @@ public class BankChestListener implements Listener {
         event.setCancelled(true);
 
         Player player = event.getPlayer();
-        if (!hasSwitchPermission(player, block.getLocation())) {
+        Town town = plugin.getChestBankManager().getTownForChest(block.getLocation());
+        if (town == null) return;
+
+        if (!hasSwitchPermission(player, town)) {
             Messaging.sendError(player, "tcb_no_towny_permission");
             return;
         }
 
-        Town town = plugin.getChestBankManager().getTownForChest(block.getLocation());
-        if (town == null) return;
         plugin.getBankChestGUI().openForPlayer(player, town);
     }
 
@@ -63,7 +63,7 @@ public class BankChestListener implements Listener {
         if (!plugin.getChestBankManager().isBankChest(block.getLocation())) return;
 
         Player player = event.getPlayer();
-        if (player.hasPermission("townychestbank.admin")) {
+        if (AdminUtil.isAdminMode(player)) {
             plugin.getChestBankManager().removeChestForTown(
                 plugin.getChestBankManager().getTownUUIDForChest(block.getLocation())
             );
@@ -175,10 +175,13 @@ public class BankChestListener implements Listener {
         }
     }
 
-    public static boolean hasSwitchPermission(Player player, Location chestLoc) {
-        if (player.hasPermission("townychestbank.admin")) return true;
+    public static boolean hasSwitchPermission(Player player, Town town) {
+        if (AdminUtil.isAdminMode(player)) return true;
+        if (town == null) return false;
         try {
-            return PlayerCacheUtil.getCachePermission(player, chestLoc, Material.CHEST, TownyPermission.ActionType.SWITCH);
+            Resident resident = TownyAPI.getInstance().getResident(player);
+            if (resident == null || !resident.hasTown()) return false;
+            return resident.getTown().getUUID().equals(town.getUUID());
         } catch (Exception e) {
             return false;
         }
