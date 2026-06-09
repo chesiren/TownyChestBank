@@ -7,6 +7,7 @@ import fr.chesiren.townychestbank.util.Messaging;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -62,10 +63,10 @@ public class BankChestGUI {
         }
 
         // Rangee 2 (slots 9-17): boutons de retrait, un par type de monnaie
-        List<Map.Entry<Material, Double>> currencies = new ArrayList<>(cfg.getCurrencyItems().entrySet());
+        List<Map.Entry<NamespacedKey, Double>> currencies = new ArrayList<>(cfg.getCurrencyItems().entrySet());
         for (int i = 0; i < 9; i++) {
             if (i < currencies.size()) {
-                Map.Entry<Material, Double> entry = currencies.get(i);
+                Map.Entry<NamespacedKey, Double> entry = currencies.get(i);
                 inv.setItem(9 + i, makeWithdrawItem(entry.getKey(), entry.getValue(), balance));
             } else {
                 inv.setItem(9 + i, sep);
@@ -80,9 +81,9 @@ public class BankChestGUI {
         double balance = getBalance(town);
         PluginConfig cfg = plugin.getPluginConfig();
         inv.setItem(4, makeBalanceItem(town.getName(), balance));
-        List<Map.Entry<Material, Double>> currencies = new ArrayList<>(cfg.getCurrencyItems().entrySet());
+        List<Map.Entry<NamespacedKey, Double>> currencies = new ArrayList<>(cfg.getCurrencyItems().entrySet());
         for (int i = 0; i < currencies.size() && i < 9; i++) {
-            Map.Entry<Material, Double> entry = currencies.get(i);
+            Map.Entry<NamespacedKey, Double> entry = currencies.get(i);
             inv.setItem(9 + i, makeWithdrawItem(entry.getKey(), entry.getValue(), balance));
         }
     }
@@ -111,13 +112,15 @@ public class BankChestGUI {
         return item;
     }
 
-    private ItemStack makeWithdrawItem(Material material, double value, double balance) {
+    private ItemStack makeWithdrawItem(NamespacedKey key, double value, double balance) {
         int maxWithdraw = (value > 0) ? (int) Math.floor(balance / value) : 0;
         maxWithdraw = Math.min(maxWithdraw, 64);
 
-        ItemStack item = new ItemStack(material, Math.max(1, maxWithdraw));
+        Material mat = plugin.getPluginConfig().getMaterial(key);
+        // BARRIER comme icone de secours si le Material n'est pas resolvable sur ce serveur
+        ItemStack item = new ItemStack(mat != null ? mat : Material.BARRIER, Math.max(1, maxWithdraw));
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + formatMaterialName(material));
+        meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + formatKeyName(key));
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + Messaging.tDefault("tcb_gui_withdraw_lore_valeur", String.format("%.2f", value)));
         if (maxWithdraw > 0) {
@@ -141,8 +144,8 @@ public class BankChestGUI {
         return item;
     }
 
-    private String formatMaterialName(Material material) {
-        String[] words = material.name().toLowerCase().split("_");
+    private String formatKeyName(NamespacedKey key) {
+        String[] words = key.getKey().split("_");
         StringBuilder sb = new StringBuilder();
         for (String word : words) {
             if (!word.isEmpty()) {

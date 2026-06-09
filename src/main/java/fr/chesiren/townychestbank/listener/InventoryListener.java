@@ -6,8 +6,8 @@ import fr.chesiren.townychestbank.TownyChestBankPlugin;
 import fr.chesiren.townychestbank.config.PluginConfig;
 import fr.chesiren.townychestbank.gui.BankChestGUI;
 import fr.chesiren.townychestbank.util.Messaging;
-import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -60,11 +60,12 @@ public class InventoryListener implements Listener {
             if (item == null || item.getType() == Material.AIR) return;
 
             PluginConfig cfg = plugin.getPluginConfig();
-            if (cfg.isCurrencyItem(item.getType())) {
+            NamespacedKey itemKey = item.getType().getKey();
+            if (cfg.isCurrencyItem(itemKey)) {
                 if (!checkPermission(player, townUUID)) return;
                 Town town = getTown(townUUID);
                 if (town == null) return;
-                double value = cfg.getItemValue(item.getType()) * item.getAmount();
+                double value = cfg.getItemValue(itemKey) * item.getAmount();
                 try {
                     town.getAccount().deposit(value, "TownyChestBank");
                     event.setCurrentItem(null);
@@ -159,8 +160,9 @@ public class InventoryListener implements Listener {
                 continue;
             }
 
-            if (cfg.isCurrencyItem(item.getType())) {
-                double value = cfg.getItemValue(item.getType()) * item.getAmount();
+            NamespacedKey itemKey = item.getType().getKey();
+            if (cfg.isCurrencyItem(itemKey)) {
+                double value = cfg.getItemValue(itemKey) * item.getAmount();
                 try {
                     town.getAccount().deposit(value, "TownyChestBank");
                     totalDeposited += value;
@@ -189,13 +191,19 @@ public class InventoryListener implements Listener {
         Town town = getTown(townUUID);
         if (town == null) return;
 
-        List<Map.Entry<Material, Double>> currencies = new ArrayList<>(cfg.getCurrencyItems().entrySet());
+        List<Map.Entry<NamespacedKey, Double>> currencies = new ArrayList<>(cfg.getCurrencyItems().entrySet());
         int idx = rawSlot - 9;
         if (idx >= currencies.size()) return;
 
-        Map.Entry<Material, Double> entry = currencies.get(idx);
-        Material mat = entry.getKey();
+        Map.Entry<NamespacedKey, Double> entry = currencies.get(idx);
+        NamespacedKey key = entry.getKey();
         double value = entry.getValue();
+
+        Material mat = cfg.getMaterial(key);
+        if (mat == null) {
+            Messaging.sendError(player, "tcb_error_withdraw");
+            return;
+        }
 
         double balance;
         try {
@@ -228,7 +236,7 @@ public class InventoryListener implements Listener {
         Messaging.sendSuccess(player, "tcb_withdrew",
             String.format("%.2f", cost),
             String.valueOf(amount),
-            mat.name().toLowerCase().replace('_', ' ')
+            key.getKey().replace('_', ' ')
         );
         gui.refreshInventory(topInv, town);
     }

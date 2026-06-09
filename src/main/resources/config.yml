@@ -1,7 +1,12 @@
-# Monnaies acceptees : nom du materiau Minecraft -> valeur en po
+# Monnaies acceptees : nom du materiau -> valeur en po
+# Items vanilla : utiliser le nom en majuscules (ex: GOLD_NUGGET)
+# Items moddés  : utiliser la cle namespaced entre guillemets (ex: "coinsje:copper_coin")
 currency:
-  GOLD_NUGGET: 1.0
-  GOLD_INGOT: 9.0
-  GOLD_BLOCK: 81.0
-  EMERALD: 10.0
-  DIAMOND: 50.0
+  "coinsje:copper_coin": 1.0
+  "coinsje:copper_coin_pile": 9.0
+  "coinsje:iron_coin": 10.0
+  "coinsje:iron_coin_pile": 90.0
+  "coinsje:gold_coin": 100.0
+  "coinsje:gold_coin_pile": 900.0
+  "coinsje:diamond_coin": 1000.0
+  "coinsje:diamond_coin_pile": 9000.0

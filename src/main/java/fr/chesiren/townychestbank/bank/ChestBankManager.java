@@ -5,6 +5,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import fr.chesiren.townychestbank.TownyChestBankPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -114,15 +115,16 @@ public class ChestBankManager {
             double remaining = town.getAccount().getHoldingBalance();
             if (remaining <= 0) return 0;
 
-            List<Map.Entry<Material, Double>> sorted = new ArrayList<>(plugin.getPluginConfig().getCurrencyItems().entrySet());
+            List<Map.Entry<NamespacedKey, Double>> sorted = new ArrayList<>(plugin.getPluginConfig().getCurrencyItems().entrySet());
             sorted.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
 
             // Première passe: calculer les stacks à dropper sans toucher au monde
             List<ItemStack> toDrop = new ArrayList<>();
             double totalDropped = 0;
-            for (Map.Entry<Material, Double> entry : sorted) {
-                Material mat = entry.getKey();
+            for (Map.Entry<NamespacedKey, Double> entry : sorted) {
+                Material mat = plugin.getPluginConfig().getMaterial(entry.getKey());
                 double value = entry.getValue();
+                if (mat == null) continue; // item moddé non resolvable sur ce serveur
                 if (value <= 0 || remaining < value) continue;
 
                 int count = (int) Math.floor(remaining / value);
