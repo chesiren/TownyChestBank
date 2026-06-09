@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,24 +21,31 @@ public class PluginConfig {
         currencyItems.clear();
         currencyMaterials.clear();
         if (!config.isConfigurationSection("currency")) return;
+
+        // Une seule passe sur Material.values() pour indexer tous les materials (vanilla + Forge).
+        // matchMaterial() ne suffit pas sur Arclight : sa HashMap interne est construite avant
+        // que Forge injecte ses items dans l'enum, donc les modded items y sont absents.
+        Map<NamespacedKey, Material> materialIndex = new HashMap<>();
+        for (Material m : Material.values()) {
+            if (!m.isLegacy()) materialIndex.put(m.getKey(), m);
+        }
+
         for (String key : config.getConfigurationSection("currency").getKeys(false)) {
             double value = config.getDouble("currency." + key);
 
-            // Essai vanilla d'abord ("GOLD_NUGGET", "minecraft:gold_nugget")
-            Material mat = Material.matchMaterial(key);
+            Material mat = Material.matchMaterial(key); // vanilla rapide
+            if (mat == null) {
+                NamespacedKey nsk = NamespacedKey.fromString(key.toLowerCase());
+                if (nsk != null) mat = materialIndex.get(nsk);
+            }
+
             if (mat != null) {
                 currencyItems.put(mat.getKey(), value);
                 currencyMaterials.put(mat.getKey(), mat);
-                continue;
+            } else {
+                NamespacedKey nsk = NamespacedKey.fromString(key.toLowerCase());
+                if (nsk != null) currencyItems.put(nsk, value);
             }
-
-            // Clé namespaced pour items moddés ("coinsje:copper_coin")
-            NamespacedKey nsk = NamespacedKey.fromString(key.toLowerCase());
-            if (nsk == null) continue;
-            currencyItems.put(nsk, value);
-            // Sur Mohist/Arclight le Material est déjà enregistré, on l'associe
-            Material modMat = Material.matchMaterial(nsk.toString());
-            if (modMat != null) currencyMaterials.put(nsk, modMat);
         }
     }
 
@@ -54,13 +62,9 @@ public class PluginConfig {
     }
 
     /**
-     * Retourne le Material associé à la clé, ou null pour les items moddés
-     * non enregistrés sur ce type de serveur.
+     * Retourne le Material associé à la clé, ou null si le mod n'est pas chargé.
      */
     public Material getMaterial(NamespacedKey key) {
-        Material mat = currencyMaterials.get(key);
-        if (mat != null) return mat;
-        // Fallback dynamique : utile si le mod est chargé après le reload du config
-        return Material.matchMaterial(key.toString());
+        return currencyMaterials.get(key);
     }
 }
