@@ -4,9 +4,9 @@
 currency:
   "coinsje:copper_coin": 1.0
   "coinsje:copper_coin_pile": 9.0
-  "coinsje:iron_coin": 10.0
-  "coinsje:iron_coin_pile": 90.0
-  "coinsje:gold_coin": 100.0
-  "coinsje:gold_coin_pile": 900.0
-  "coinsje:diamond_coin": 1000.0
-  "coinsje:diamond_coin_pile": 9000.0
+  "coinsje:iron_coin": 9.0
+  "coinsje:iron_coin_pile": 81.0
+  "coinsje:gold_coin": 81.0
+  "coinsje:gold_coin_pile": 729.0
+  "coinsje:diamond_coin": 729.0
+  "coinsje:diamond_coin_pile": 6561.0
